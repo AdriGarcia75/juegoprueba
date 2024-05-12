@@ -1,79 +1,48 @@
 package Code;
 
-public class Personaje {
+public class Personaje extends Entidad {
     //hacer: guardar el estado del personaje (sencillo), la cosa, como cargas el personaje XD, (habra que hacer un cargador y guardar el personaje en un archivo ig)
 
     //declaracion de estados y atributos para el personaje
-    private final String nombre;
-    //cap de vida
-    private int vidaBase;
-    private int vidaActual;
-    private int dano;
-    //el contador de experiencia, cuando pueda subir de nivel volverá a 0 hasta llenarse
+    private String nombre;
+    //limite de vida del personaje, este sube con cada nivel y la vida actual NUNCA sobrepasará el limite
+    //daño total: daño base + el daño del arma equipada
+    private float danoTotal;
+    // private int velocidad;
     private int contadorExperiencia = 0;
-    //el nivel del personaje, todos comienzan a nivel uno y podran subir de nivel adquiriendo experiencia
-    private int nivelPersonaje = 1;
-    //este requisito ira incrementando mediante una formula
+    // private int nivelPersonaje = 1;
     private int requisitoExperiencia = 100;
+    private int contadorMonstruos = 0;
+    private int contadorMonedas = 0;
+    //variable que guarda el estado de la tienda - esta solo se actualizará al subir el personaje de nivel
+    // private Tienda tiendaPersonaje;
+    //variable que guarda el arma que puede llevar equipada el personaje
+    //private Arma armaPersonaje;
+    //variable que guarda la cantidad de pociones que lleva el personaje
+    private int pocionesPersonaje = 0;
 
     //constructor para el personaje
-    //declaramos nuestro personaje con una vidaBase y un daño base
-    public Personaje(String nombre, int vidaBase, int danoBase) {
-        //no se admiten personajes con vida o daño menor/igual a 0
-        try {
-            if (vidaBase <= 0 || danoBase <= 0) {
-                throw new IllegalArgumentException("El daño o vida base deben ser mayores a 0");
-            }
-        } catch (IllegalArgumentException e) {
-            //hacemos un err.println para imprimir un error y utilizamos getMessage en el error para imprimir exactamente el error que es
-            System.err.println("Error al crear el personaje: " + e.getMessage());
-        }
-        //asignamos los valores introducidos en el instanciamiento del objeto
+    public Personaje(String nombre, int vidaBase, int dano, int velocidad) {
+        //llamamos al constructor de la clase padre
+        super(vidaBase, dano, velocidad);
+        //asignamos los valores a los atributos restantes, propios de la clase Personaje
         this.nombre = nombre;
-        this.vidaBase = vidaBase;
-        this.dano = danoBase;
+        this.danoTotal = dano;
+
+        //
     }
 
     //lista de setters/getters y metodos para Personaje
-    public void incrementarExperiencia(int cantidad) {
-
-        this.contadorExperiencia += cantidad;
-    }
-
-    public String getNombre() {
-        return this.nombre;
-    }
-
-    public int getVida() {
-        return this.vidaBase;
-    }
-
-    public int getDano() {
-        return this.dano;
-    }
-
-    public void setVida(int vida) {
-        this.vidaBase = vida;
-    }
-
-    public void setDano(int dano) {
-        this.dano = dano;
-    }
-
-    public int getVidaActual() {
-        return vidaActual;
-    }
-
-    public void setVidaActual(int vidaActual) {
-        this.vidaActual = vidaActual;
-    }
-
-    public int getNivelPersonaje() {
-        return this.nivelPersonaje;
-    }
-
     public int getContadorExperiencia() {
         return this.contadorExperiencia;
+    }
+
+    public int getContadorMonedas() {
+        return this.contadorMonedas;
+    }
+
+    public int getContadorMonstruos() {
+        return contadorMonstruos;
     }
 
     public int getRequisitoExperiencia() {
@@ -84,8 +53,12 @@ public class Personaje {
         this.contadorExperiencia = contadorExperiencia;
     }
 
-    public void setNivelPersonaje(int nivelPersonaje) {
-        this.nivelPersonaje = nivelPersonaje;
+    public void incrementarContadorMonedas(int monedas) {
+        this.contadorMonedas += monedas;
+    }
+
+    public void incrementarContadorMonstruos() {
+        this.contadorMonstruos++;
     }
 
     //setter para el requisito de experiencia
@@ -95,36 +68,43 @@ public class Personaje {
 
     //cuando subamos de nivel, habremos de recalcular el nuevo limite de experiencia para el siguiente nivel
     private int incrementoRequisitoExperiencia() {
-        return getRequisitoExperiencia() + getNivelPersonaje() * 15;
+        return getRequisitoExperiencia() + getNivel() * 5;
     }
 
     //metodo el que podemos saber si podemos subir de nivel
-    public boolean apto() {
+    public boolean aptoSubirNivel() {
         return getContadorExperiencia() >= getRequisitoExperiencia();
     }
 
-    //funcion que incrementa las "estadisticas"
-    private void incrementoEstadisticas() {
-        //esto simula una especie de "escalado" para las estadisticas
-        this.dano += (int) (getNivelPersonaje() * 1.1);
-        this.vidaBase += (int) (getNivelPersonaje() * 1.1) + 2;
+    public void incrementoEstadisticas() {
+        //esta formula simula un "escalado" para las estadisticas
+        setDano(getDano() + (int) (getNivel() * 1.1));
+        setVidaBase(getVidaBase() + (int) (getNivel() * 1.1) + 2);
+        setVelocidad(getVelocidad() + (float) (getNivel() * 0.1));
     }
 
     //esta funcion llama al metodo de incrementar las "estadisticas" del personaje a parte de actualizar los requerimientos para subir de nivel
     public void subirNivel() {
-        if (this.contadorExperiencia >= this.requisitoExperiencia) {
-            //recalculamos el nuevo requisito de experiencia
-            this.requisitoExperiencia = incrementoRequisitoExperiencia();
+        if (aptoSubirNivel()) {
             //recalculamos la experiencia - nos quedamos con el sobrante de experiencia (por ejemplo; 1002/1000, nos quedamos con 2 de exp)
-            setContadorExperiencia(getContadorExperiencia() - getRequisitoExperiencia());
-            //incrementamos el nivel del personaje
-            setNivelPersonaje(getNivelPersonaje() + 1);
+            setContadorExperiencia(this.contadorExperiencia - this.requisitoExperiencia);
+            //recalculamos y asignamos el nuevo requisito de experiencia
+            setRequisitoExperiencia(incrementoRequisitoExperiencia());
             //llamamos a la funcion de incremento de estadisticas
             incrementoEstadisticas();
+            //y por ultimo incrementamos el nivel del personaje
+            setNivel(getNivel() + 1);
         } else {
             int experienciaRestante = getRequisitoExperiencia() - getContadorExperiencia();
-            System.out.println("No es posible subir de nivel, necesitas " + experienciaRestante + " puntos de experiencia");
+            System.out.println("No es posible subir de nivel aún, necesitas " + experienciaRestante + " puntos de experiencia");
         }
+    }
 
+    public void atacar(Entidad objetivo){
+
+    }
+
+    public void curar(){
+        //metodo en el que se enchufa una pocion el suprimo sabe
     }
 }

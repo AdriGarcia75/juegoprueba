@@ -1,5 +1,7 @@
 # Proyecto de práctiva para OOP en Java
 
+### side note: re-write everything to english
+
 ## Descripción
 Este proyecto consiste en el desarrollo de un pequeño videojuego en Java como proyecto de práctica implementando OOP, donde el jugador controla un personaje que puede pertenecer a diferentes clases, como por ejemplo un guerrero o un clérigo. Cada personaje posee atributos como ataque, vida y velocidad, siendo esta última determinante para determinar el orden de los ataques en combate.
 

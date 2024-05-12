@@ -61,7 +61,5 @@ public class Monstruo extends Entidad {
 
     }
 
-    public void atacar(Entidad objetivo){
-
-    }
+    public void atacar(Entidad objetivo){}
 }

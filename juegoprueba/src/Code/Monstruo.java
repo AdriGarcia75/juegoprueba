@@ -57,7 +57,7 @@ public class Monstruo extends Entidad {
     }
 
     public void subirNivel(){
-        //actualizar monedas y exp soltadas + todo lo otro
+        //actualizar monedas y exp soltadas + lo restante
 
     }
 

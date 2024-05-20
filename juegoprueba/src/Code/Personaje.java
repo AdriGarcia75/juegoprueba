@@ -6,6 +6,7 @@ public class Personaje extends Entidad {
     //declaracion de estados y atributos para el personaje
     private String nombre;
     //limite de vida del personaje, este sube con cada nivel y la vida actual NUNCA sobrepasará el limite
+    private int danoBase;
     //daño total: daño base + el daño del arma equipada
     private float danoTotal;
     // private int velocidad;
@@ -14,10 +15,10 @@ public class Personaje extends Entidad {
     private int requisitoExperiencia = 100;
     private int contadorMonstruos = 0;
     private int contadorMonedas = 0;
-    //variable que guarda el estado de la tienda - esta solo se actualizará al subir el personaje de nivel
-    // private Tienda tiendaPersonaje;
+    //variable que guarda el estado de la tienda - esta se actualizará/reiniciará al subir el personaje de nivel
+    private Tienda tiendaPersonaje;
     //variable que guarda el arma que puede llevar equipada el personaje
-    //private Arma armaPersonaje;
+    private Arma armaPersonaje;
     //variable que guarda la cantidad de pociones que lleva el personaje
     private int pocionesPersonaje = 0;
 
@@ -27,9 +28,11 @@ public class Personaje extends Entidad {
         super(vidaBase, dano, velocidad);
         //asignamos los valores a los atributos restantes, propios de la clase Personaje
         this.nombre = nombre;
+        this.danoBase = dano;
         this.danoTotal = dano;
+        //pasamos por parametro el personaje mismo a la tienda, es necesario para cumplir con la logica del programa
+        this.tiendaPersonaje = new Tienda(this);
 
-        //
     }
 
     //lista de setters/getters y metodos para Personaje
@@ -69,6 +72,28 @@ public class Personaje extends Entidad {
     //setter para el requisito de experiencia
     public void setRequisitoExperiencia(int requisitoExperiencia) {
         this.requisitoExperiencia = requisitoExperiencia;
+    }
+
+    public Tienda getTiendaPersonaje() {
+        return tiendaPersonaje;
+    }
+
+    public void setTiendaPersonaje(Tienda tiendaPersonaje) {
+        this.tiendaPersonaje = tiendaPersonaje;
+    }
+
+    public Arma getArmaPersonaje() {
+        return armaPersonaje;
+    }
+
+    public void setArmaPersonaje(Arma armaPersonaje) {
+        this.armaPersonaje = armaPersonaje;
+        calcularDano();
+        System.out.println("Se ha equipado el arma " + armaPersonaje + ", ahora tu daño es " + this.danoTotal);
+    }
+
+    public void calcularDano(){
+        this.danoTotal = armaPersonaje.getDanoArma() + this.danoBase;
     }
 
     //cuando subamos de nivel, habremos de recalcular el nuevo limite de experiencia para el siguiente nivel
@@ -112,14 +137,10 @@ public class Personaje extends Entidad {
     public void curar(){
         if (pocionesPersonaje > 0){
             int cantidadCuracion = getCantidadCuracion();
-            //con este math.min nos aseguramos que si la suma de vidaActual + vida a curar es mayor a la vida base, se asignará la vida base y si no, curamos normal
+            //con este math.min nos aseguramos que si la suma de vidaActual + vida a curar es mayor a la vida maxima permitida, se asignará la vida base y si no, curamos normal
             setVidaActual(Math.min(getVidaActual() + cantidadCuracion, getVidaBase()));
         } else {
             System.out.println("No te quedan pociones, no puedes curarte.");
         }
-    }
-
-    public void comprar(){
-
     }
 }

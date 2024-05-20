@@ -61,6 +61,11 @@ public class Personaje extends Entidad {
         this.contadorMonstruos++;
     }
 
+    //calculamos la cantidad de vida que la pocion podra curar al personaje
+    public int getCantidadCuracion(){
+        return (getVidaBase() * 20 / 100) + getNivel() + 10;
+    }
+
     //setter para el requisito de experiencia
     public void setRequisitoExperiencia(int requisitoExperiencia) {
         this.requisitoExperiencia = requisitoExperiencia;
@@ -105,6 +110,16 @@ public class Personaje extends Entidad {
     }
 
     public void curar(){
-        //metodo en el que se enchufa una pocion el suprimo sabe
+        if (pocionesPersonaje > 0){
+            int cantidadCuracion = getCantidadCuracion();
+            //con este math.min nos aseguramos que si la suma de vidaActual + vida a curar es mayor a la vida base, se asignará la vida base y si no, curamos normal
+            setVidaActual(Math.min(getVidaActual() + cantidadCuracion, getVidaBase()));
+        } else {
+            System.out.println("No te quedan pociones, no puedes curarte.");
+        }
+    }
+
+    public void comprar(){
+
     }
 }

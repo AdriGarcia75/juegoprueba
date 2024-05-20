@@ -71,11 +71,12 @@ public abstract class Entidad {
         this.nivel = nivel;
     }
 
-    //funcion que incrementa las estadisticas del personaje/monstruo
+    //funcion que incrementa las estadisticas del personaje/monstruo a partir del nivel
     public abstract void incrementoEstadisticas();
 
-    public abstract void subirNivel();
+    /* la cabecera de Monstruo.subirNivel es distinta, inicialmente (antes de implementar ambos metodos) la idea era que fuera abstract ya que la cabecera era la misma */
+    //  public abstract void subirNivel();
 
-    //se utilizará en el metodo batalla en el main
+    //se utilizará en el metodo batalla en el main - se decidirá quien ataca primero y se ejecutará atacar() tanto personaje como monstruo
     public abstract void atacar(Entidad objetivo);
 }

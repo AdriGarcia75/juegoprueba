@@ -1,6 +1,6 @@
 # Proyecto de práctiva para OOP en Java
 
-### side note: re-write everything to english
+### side note: check translation
 
 ## Descripción
 The aim of this project is to develop a small videogame in Java implementing OOP, where there player controls a character that is from a predetermined class, such as a warrior or a cleric. Each character has attributes like attack, health and speed, this last one being the one that defines the order of attacks in fights.

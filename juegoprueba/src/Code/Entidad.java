@@ -1,6 +1,8 @@
 package Code;
 
-public abstract class Entidad {
+import java.io.Serializable;
+
+public abstract class Entidad implements Serializable {
 
     //declaracion de estados comunes para Personaje y Monstruo
     private int vidaBase;
@@ -16,17 +18,18 @@ public abstract class Entidad {
         //no se admiten personajes con vida o daño menor/igual a 0
         try {
             if (vidaBase <= 0 || dano <= 0 || velocidad <= 0) {
-                throw new IllegalArgumentException("Se ha detectado algun atributo con valor menor o igual a 0");
+                throw new IllegalArgumentException("ERROR - Se ha detectado algun atributo con valor menor o igual a 0.");
             }
         } catch (IllegalArgumentException e) {
             //hacemos un err.println para imprimir un error y utilizamos getMessage en el error para imprimir exactamente el error que es
-            System.err.println("Se utilizaran valores por defecto para crear el: " + e.getMessage());
+            System.err.println(e.getMessage() + " Se utilizaran valores por defecto para crear el personaje. ");
             //sobreescribiremos los datos de entrada y utilizaremos valores por defecto
             vidaBase = 20;
             dano = 3;
             velocidad = 2;
         }
         this.vidaBase = vidaBase;
+        this.vidaActual = vidaBase;
         this.dano = dano;
         this.velocidad = velocidad;
     }
@@ -73,10 +76,4 @@ public abstract class Entidad {
 
     //funcion que incrementa las estadisticas del personaje/monstruo a partir del nivel
     public abstract void incrementoEstadisticas();
-
-    /* la cabecera de Monstruo.subirNivel es distinta, inicialmente (antes de implementar ambos metodos) la idea era que fuera abstract ya que la cabecera era la misma */
-    //  public abstract void subirNivel();
-
-    //se utilizará en el metodo batalla en el main - se decidirá quien ataca primero y se ejecutará atacar() tanto personaje como monstruo
-    public abstract void atacar(Entidad objetivo);
 }

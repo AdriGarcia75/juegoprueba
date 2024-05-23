@@ -2,7 +2,6 @@ package Code;
 
 import java.util.Random;
 
-
 public class Monstruo extends Entidad {
 
     //lista de posibles nombres para el monstruo
@@ -12,7 +11,7 @@ public class Monstruo extends Entidad {
     private int monedasSoltadas;
     private int experienciaSoltada;
 
-    public Monstruo (int vidaBase, int dano, int velocidad){
+    public Monstruo (int vidaBase, float dano, float velocidad){
         super(vidaBase, dano, velocidad);
 
         this.nombreMonstruo = nombreMonstruoAleatorio(listaNombresMonstruo);
@@ -21,8 +20,9 @@ public class Monstruo extends Entidad {
     }
 
     public String nombreMonstruoAleatorio(String[] listaNombresMonstruo){
-        //escogemos de manera aleatoria un nombre para el Monstruo utilizando la clase random de java
-        return listaNombresMonstruo[(int) (Math.random() * listaNombresMonstruo.length)];
+        //escogemos de manera aleatoria un nombre para el Monstruo utilizando la clase Random de java
+        Random random = new Random();
+        return listaNombresMonstruo[random.nextInt(listaNombresMonstruo.length)];
     }
 
     public String getNombreMonstruo() {
@@ -66,8 +66,11 @@ public class Monstruo extends Entidad {
         if (getNivel() < personaje.getNivel()){
             int cantidadNiveles = personaje.getNivel() - getNivel();
             //por si en algun momento el monstruo queda más de un nivel por detrás, implementar en un bucle las veces que ha de subir de nivel prevendrá ese probelam
-            for (int i = 0; i < personaje.getNivel() - getNivel(); i++){
+            for (int i = 0; i < cantidadNiveles; i++){
                 incrementoEstadisticas();
+                //actualizamos los valores de
+                setMonedasSoltadas(actualizarMonedasSoltadas());
+                setExperienciaSoltada(actualizarExperienciaSoltada());
             }
         } else {
             System.out.println("En este momento el monstruo no puede subir de nivel ");
@@ -75,8 +78,26 @@ public class Monstruo extends Entidad {
     }
 
 
+    public void atacar(Personaje objetivo){
+        float danoInfligido = this.getDano();
 
-    public void atacar(Entidad objetivo){
+        // Reducir la vida del objetivo
+        objetivo.setVidaActual((int) (objetivo.getVidaActual() - danoInfligido));
 
+        // Imprimir el resultado del ataque
+        System.out.println(this.nombreMonstruo + " atacó a " + objetivo.getNombre() + " e infligió " + danoInfligido + " de daño.");
+
+        // Comprobar si el objetivo ha sido derrotado
+        if (objetivo.getVidaActual() <= 0) {
+            System.out.println(objetivo.getNombre() + " ha sido derrotado.");
+            // Aquí podrías agregar lógica adicional, como finalizar el juego o restablecer el personaje
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Monstruo{" +
+                "nombreMonstruo='" + nombreMonstruo + '\'' +
+                '}';
     }
 }

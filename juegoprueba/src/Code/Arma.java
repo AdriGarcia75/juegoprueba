@@ -1,8 +1,9 @@
 package Code;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Arma {
+public class Arma implements Serializable {
 
     private final String[] listaNombresArmas = {"Espada", "Hacha", "Martillo", "Lanza"};
 
@@ -20,7 +21,7 @@ public class Arma {
     }
 
     public String nombreArmaAleatorio(String[] listaNombresArmas){
-        //escogemos de manera aleatoria un nombre para el Monstruo utilizando la clase random de java
+        //escogemos de manera aleatoria un nombre para el Monstruo utilizando la clase Random de java
         Random random = new Random();
         return listaNombresArmas[random.nextInt(listaNombresArmas.length)];
     }
@@ -40,10 +41,4 @@ public class Arma {
                 ", danoArma=" + danoArma +
                 '}';
     }
-
-    public void comprarPociones(){
-
-    }
-
-
 }
